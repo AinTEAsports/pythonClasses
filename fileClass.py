@@ -4,7 +4,18 @@ import os
 class File:
 
     def __init__(self, filename : str, createNew : bool = False) -> None :
-        if not os.path.exists(filename) or createNew:
+        """Init function
+
+        Args:
+            filename (str): the file's name
+            createNew (bool, optional): Parameter to know if we can overwrite an existing file. Defaults to False.
+        """
+        
+        if not createNew and not os.path.exists(filename):
+            raise FileNotFoundError(f"file '{filename}' not found, if you want to automatically create it, even it does not exists, make sure parameter 'createNew' is set up to 'True'")
+        
+        
+        if not os.path.exists(filename) and createNew:
             with open(filename, 'w') as f:
                 f.write("")
 
@@ -13,6 +24,12 @@ class File:
 
 
     def write(self, text : str) -> None :
+        """Method to write text in a file, it will overwrite the file. For not overwriting the file, use the 'append' method
+
+        Args:
+            text (str): the text to write in the file
+        """
+        
         if not text:
             return
 
@@ -21,6 +38,12 @@ class File:
 
 
     def append(self, text : str) -> None :
+        """Method to write text in a file, it will not overwrite it, just append the text in the end of the file
+
+        Args:
+            text (str): the text to write in the file
+        """
+
         if not text:
             return
 
@@ -29,13 +52,48 @@ class File:
 
 
     def read(self, encoding : str = 'utf-8') -> str :
-            return open(self.__filename, 'r', encoding=encoding).read()
+        """Method to read the content of the file
+
+        Args:
+            encoding (str, optional): the encoding you want to read the file with. Defaults to 'utf-8'.
+
+        Returns:
+            str: the file's content
+        """
+        
+        with open(self.__filename, 'r') as f:
+            fileContent = f.read()
+
+        return fileContent
 
 
     def binaryRead(self) -> str :
-        return open(self.__filename, 'rb').read()
+        """Method to read the content of the file, in binary
+
+        Returns:
+            str: the file's content, in binary
+        """
+        
+        with open(self.__filename, 'rb') as f:
+            binaryContent = f.read()
+            
+        return binaryContent
 
 
-    def getLines(self, encoding : str = 'utf-8') -> str :
-        return self.read(encoding=encoding).split('\n')
+    def getLines(self, encoding : str = 'utf-8', delimitor : str = '\n') -> list[str] :
+        """Method to get files lines
 
+        Args:
+            encoding (str, optional): the encoding you want to read the file with. Defaults to 'utf-8'.
+            delimitor (str, optional): the delimitor between the lines. Defaults to '\\n'
+
+        Returns:
+            list[str]: a list containing the file's lines
+        """
+        
+        return self.read(encoding=encoding).split(delimitor)
+
+
+
+if __name__ == "__main__":
+    print("Chuck Norris has no dad, we do not f*ck Chuck Norris mother")
