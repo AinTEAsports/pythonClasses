@@ -1,12 +1,28 @@
 class LimitedList(tuple):
 
-    def __init__(self, limit : int, preList : list=None, fillWith=None):
+    def __init__(self, limit : int, preList : list = None, fillWith : object = None):
+        """Init function
+
+        Args:
+            limit (int): list max length
+            preList (list, optional): list given, if no. Defaults to None.
+            fillWith (object, optional): _description_. Defaults to None.
+
+        Raises:
+            ValueError: _description_
+        """
+        
         if limit <= 0:
             raise ValueError("You can't set max value to 0 or beneath")
-
+        
         # By default, all list elements will be None
         if not preList:
             preList = [fillWith] * limit
+        elif preList and fillWith:
+            preList += [fillWith] * (limit-len(preList))
+        else:
+            if len(preList) > limit:
+                raise ValueError(f"'preList' parameter's length cannot be superior to 'limit' parameter")
 
         self.limit = limit
         self.__limitedList = preList
@@ -37,18 +53,11 @@ class LimitedList(tuple):
 
 
     def getTuple(self, showDefaultValue : bool = False) -> tuple :
-        if showDefaultValue:
-            return self.__limitedList
-        else:
-            toReturn = []
-
-            for element in self.__limitedList:
-                if element != self.__defaultValue:
-                    toReturn.append(element)
-
-            return tuple(toReturn)
-
+        if not showDefaultValue:
+            return [element for element in self.__limitedList if element != self.__defaultValue]
+        
         return self.__limitedList
+        
 
 
     def getLimit(self) -> int :
@@ -56,8 +65,8 @@ class LimitedList(tuple):
 
 
 if __name__ == "__main__":
-    lim = LimitedList(limit=5)
-    lim.setValue(1, 'Prout')
-    print(lim.getTuple())
-    print(lim.getList())
+    print(isinstance(None, object))
 
+
+
+# REVOIR L'ALGO DE TOUT CE BORDEL ET CHANGER SI BESOIN, IDEM POUR LES AUTRES FICHIERS
