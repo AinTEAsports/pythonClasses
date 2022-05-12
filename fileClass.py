@@ -1,4 +1,5 @@
 import os
+import hashlib
 
 
 class File:
@@ -92,6 +93,25 @@ class File:
         """
         
         return self.read(encoding=encoding).split(delimitor)
+
+
+    def xorCrypt(self, password : str, outputFile : str) -> None :
+        if outputFile == self.__filename:
+            raise FileExistsError("You can't replace your actual file, for the moment...")
+
+        hashedPasswd = hashlib.sha256(password.encode('utf-8')).digest()
+        
+        with open(self.__filename, 'rb') as f:
+            with open(outputFile, 'wb') as f2:
+                i = 0
+
+                while f.peek():
+                    c = ord(f.read(1))
+                    j = i % len(hashedPasswd)
+                    b = bytes([c^hashedPasswd[j]])
+                    f2.write(b)
+
+                    i += 1
 
 
 
