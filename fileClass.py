@@ -1,27 +1,36 @@
 import os
 import hashlib
 
+from dataclasses import dataclass, field
 
+
+@dataclass(frozen=True)
 class File:
+    __filename: str
+    create_new: bool = False
 
-    def __init__(self, filename : str, createNew : bool = False) -> None :
-        """Init function
+    def __post_init__(self) -> None :
+        """Post init function
 
         Args:
             filename (str): the file's name
             createNew (bool, optional): Parameter to know if we can overwrite an existing file. Defaults to False.
         """
         
-        if not createNew and not os.path.exists(filename):
-            raise FileNotFoundError(f"file '{filename}' not found, if you want to automatically create it, even it does not exists, make sure parameter 'createNew' is set up to 'True'")
+        if not self.create_new and not os.path.exists(self.__filename):
+            raise FileNotFoundError(f"file '{self.__filename}' not found, if you want to automatically create it, even it does not exists, make sure parameter 'createNew' is set up to 'True'")
         
         
-        if not os.path.exists(filename) and createNew:
-            with open(filename, 'w') as f:
+        if not os.path.exists(self.__filename) and self.create_new:
+            with open(self.__filename, 'w') as f:
                 f.write("")
+                
+        del create_new
 
-        self.__filename = filename
-        self.__absolutePath = os.path.abspath(self.__filename)
+        
+        @property
+        def __absolute_path(self) -> str :
+            return os.path.abspath(self.__filename)
 
 
     def write(self, text : str) -> None :
