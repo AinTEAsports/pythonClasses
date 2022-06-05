@@ -1,7 +1,7 @@
 import os
 import hashlib
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
@@ -12,9 +12,10 @@ class File:
     def __post_init__(self) -> None :
         """Post init function
 
-        Args:
-            filename (str): the file's name
-            createNew (bool, optional): Parameter to know if we can overwrite an existing file. Defaults to False.
+        Raises:
+            FileNotFoundError: if the file was not found.
+                If you want to escape this error set arg
+                'create_new' to 'True' in initializer
         """
         
         if not self.create_new and not os.path.exists(self.__filename):
@@ -25,15 +26,15 @@ class File:
             with open(self.__filename, 'w') as f:
                 f.write("")
                 
-        del create_new
+        del self.create_new
 
-        
+
         @property
         def __absolute_path(self) -> str :
             return os.path.abspath(self.__filename)
 
 
-    def write(self, text : str) -> None :
+    def write(self, text : str, encoding : str = "utf-8") -> None :
         """Method to write text in a file, it will overwrite the file. For not overwriting the file, use the 'append' method
 
         Args:
@@ -43,11 +44,11 @@ class File:
         if not text:
             return
 
-        with open(self.__filename, 'w') as f:
+        with open(self.__filename, 'w', encoding=encoding) as f:
             f.write(text)
 
 
-    def append(self, text : str) -> None :
+    def append(self, text : str, encoding : str = "utf-8") -> None :
         """Method to write text in a file, it will not overwrite it, just append the text in the end of the file
 
         Args:
@@ -57,11 +58,11 @@ class File:
         if not text:
             return
 
-        with open(self.__filename, 'a') as f:
+        with open(self.__filename, 'a', encoding=encoding) as f:
             f.write(text)
 
 
-    def read(self, encoding : str = 'utf-8') -> str :
+    def read(self, encoding : str = 'utf-8', ignore_errors : bool = False) -> str :
         """Method to read the content of the file
 
         Args:
@@ -71,13 +72,17 @@ class File:
             str: the file's content
         """
         
-        with open(self.__filename, 'r') as f:
-            fileContent = f.read()
+        if ignore_errors:
+            with open(self.__filename, 'r', encoding=encoding, errors="ignore") as f:
+                file_content = f.read()
+        else:
+            with open(self.__filename, 'r', encoding=encoding) as f:
+                file_content = f.read()
 
-        return fileContent
+        return file_content
 
 
-    def binaryRead(self) -> str :
+    def binary_read(self) -> str :
         """Method to read the content of the file, in binary
 
         Returns:
@@ -85,17 +90,17 @@ class File:
         """
         
         with open(self.__filename, 'rb') as f:
-            binaryContent = f.read()
+            binary_content = f.read()
             
-        return binaryContent
+        return binary_content
 
 
-    def getLines(self, encoding : str = 'utf-8', delimitor : str = '\n') -> list[str] :
+    def get_lines(self, encoding : str = 'utf-8', delimitor : str = '\n') -> list[str] :
         """Method to get files lines
 
         Args:
             encoding (str, optional): the encoding you want to read the file with. Defaults to 'utf-8'.
-            delimitor (str, optional): the delimitor between the lines. Defaults to '\\n'
+            delimitor (str, optional): the delimitor between the lines. Defaults to '\n'
 
         Returns:
             list[str]: a list containing the file's lines
@@ -104,20 +109,20 @@ class File:
         return self.read(encoding=encoding).split(delimitor)
 
 
-    def xorCrypt(self, password : str, outputFile : str) -> None :
-        if outputFile == self.__filename:
+    def xor_crypt(self, password : str, output_filename : str) -> None :
+        if output_filename == self.__filename:
             raise FileExistsError("You can't replace your actual file, for the moment...")
 
-        hashedPasswd = hashlib.sha256(password.encode('utf-8')).digest()
+        hashed_password = hashlib.sha256(password.encode('utf-8')).digest()
         
         with open(self.__filename, 'rb') as f:
-            with open(outputFile, 'wb') as f2:
+            with open(output_filename, 'wb') as f2:
                 i = 0
 
                 while f.peek():
                     c = ord(f.read(1))
-                    j = i % len(hashedPasswd)
-                    b = bytes([c^hashedPasswd[j]])
+                    j = i % len(hashed_password)
+                    b = bytes([c^hashed_password[j]])
                     f2.write(b)
 
                     i += 1
