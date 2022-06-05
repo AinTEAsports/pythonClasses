@@ -25,8 +25,6 @@ class File:
         if not os.path.exists(self.__filename) and self.create_new:
             with open(self.__filename, 'w') as f:
                 f.write("")
-                
-        del self.create_new
 
 
         @property
