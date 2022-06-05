@@ -1,46 +1,48 @@
 import os
 import json
+from dataclasses import dataclass
 
-from typing import Any
+from typing import Any, Dict
 
 
+@dataclass(frozen=True)
 class JsonHandler:
-    
-    def __init__(self, json_filename : str, create_new : bool = False) -> None :
-        """Init method for JsonHandler class
+    __json_filename: str
+    __create_new: bool = False
+
+    def __post_init__(self) -> None :
+        """Post init method for JsonHandler class
 
         Args:
             json_filename (str): your json filename
             create_new (bool, optional): option to create new file if which you given was not found. Defaults to False.
 
         Raises:
-            FileNotFoundError: if the "json_filename" was not found and "create_new" was not set up to True
+            FileNotFoundError: if the "json_filename" was not found and "create_new" was set up to False
         """
-        
-        if not os.path.exists(json_filename):
-            if create_new:
-                with open(json_filename, 'w') as f:
+
+        if not os.path.exists(self.__json_filename):
+            if self.__create_new:
+                with open(self.__json_filename, 'w') as f:
                     f.write("{}")
             else:
                 raise FileNotFoundError("given json file does not exists")
 
-        self.__filename = json_filename
 
-
-    def get_json(self) -> dict[str:str] :
+    def get_json(self) -> Dict[str:str] :
         """Method to get json file content
 
         Returns:
             dict[str:str]: the content of the json file
         """
-        
+
         with open(self.__filename, 'r') as f:
             json_object = json.load(f)
         
         return json_object
 
 
-    def update(self, new_json : dict[str]) -> None :
+    def update(self, new_json : Dict[str]) -> None :
         """Method to replace json content with a new dict
 
         Args:
@@ -51,7 +53,7 @@ class JsonHandler:
             json.dump(new_json, f)
             
     
-    def expand(self, to_add : dict[str]) -> None :
+    def expand(self, to_add : Dict[str]) -> None :
         """Method to concatenate json file content with a new dict
 
         Args:
@@ -85,12 +87,12 @@ class JsonHandler:
         self.update(new_json=newDict)
 
 
-    def reinitialize(self, force_reinitialize : bool = True) -> None :
+    def reinitialize(self, force_reinitialize : bool = False) -> None :
         """Method that reinitialize the json file
 
         Args:
             force_reinitialize (bool, optional): force reinitialize by deleting the file before writing in it. 
-                                                 It avoids errors like corrupted file or something else. Defaults to True.
+                It avoids errors like corrupted file or something else. Defaults to False.
         """
         
         if force_reinitialize:
@@ -114,3 +116,7 @@ class JsonHandler:
         
         return key in json_object.keys()
 
+
+
+if __name__ == "__main__":
+    print("Chuck Norris has found the one piece")
