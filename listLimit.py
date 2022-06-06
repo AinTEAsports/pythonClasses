@@ -42,9 +42,19 @@ class LimitedList:
     
     
     @property
-    def __max_length(self) -> int :
+    def max_length(self) -> int :
         return self.__max_length
-    
+
+
+    def set_array(self, new_tuple : tuple[Any]) -> None :
+        if len(new_tuple) > self.max_length:
+            raise SizeError("size of new tuple is greater than authorized")
+        
+        if not isinstance(new_tuple, tuple):
+            raise TypeError("new tuple has not tuple type")
+        
+        self.__array = new_tuple
+        
 
     def set_value(self, index : int, new_value : Any) -> None :
         if index >= self.__max_length:
