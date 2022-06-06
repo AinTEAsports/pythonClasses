@@ -2,6 +2,10 @@ from typing import Any, Tuple
 from dataclasses import dataclass, field
 
 
+class SizeError(Exception):
+    pass
+
+
 @dataclass(kw_only=True)
 class LimitedList:
     array: tuple[Any] = field(default_factory=tuple)
