@@ -46,6 +46,11 @@ class LimitedList:
         return self.__max_length
 
 
+    @property
+    def size(self) -> int :
+        return len(self.tuple_array)
+
+
     def set_array(self, new_tuple : tuple[Any]) -> None :
         if len(new_tuple) > self.max_length:
             raise SizeError("size of new tuple is greater than authorized")
@@ -66,6 +71,18 @@ class LimitedList:
         temp_list[index] = new_value
 
         self.__array = tuple(temp_list)
+        
+        
+    def add(self, value : Any) -> None :
+        pass
+    
+    
+    def pop(self, index : int) -> Any :
+        pass
+    
+    
+    def clear(self) -> None :
+        self.__array = ()
 
 
 
