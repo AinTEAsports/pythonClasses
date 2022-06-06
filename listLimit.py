@@ -87,6 +87,6 @@ class LimitedList:
 
 
 if __name__ == "__main__":
-    print(isinstance(None, object))
+    print("When Chuck Norris goes out, the one who wears a mask is Coronavirus")
 
 # REVOIR L'ALGO DE TOUT CE BORDEL ET CHANGER SI BESOIN, IDEM POUR LES AUTRES FICHIERS
