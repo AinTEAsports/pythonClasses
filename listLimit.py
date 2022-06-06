@@ -84,6 +84,11 @@ class LimitedList:
         
     
     def insert(self, index : int, value : int) -> None :
+        if index >= self.max_length:
+            raise IndexError("index is greater or equals than max_length")
+        elif index < 0:
+            raise IndexError("index can't beneath 0")
+        
         if len(self.tuple_array) == self.max_length:
             return SizeError("array is already at maximum size")
         
