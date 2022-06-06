@@ -1,12 +1,21 @@
-class LimitedList(tuple):
+from typing import Any, Tuple
+from dataclasses import dataclass, field
 
-    def __init__(self, limit : int, preList : list = None, fillWith : object = None):
-        """Init function
+
+@dataclass(kw_only=True)
+class LimitedList:
+    array: tuple[Any] = field(default_factory=tuple)
+    max_length: int
+    fill_with: Any = field(default=None)
+
+
+    def __post_init__(self) -> None :
+        """Post init function
 
         Args:
-            limit (int): list max length
-            preList (list, optional): list given, if no. Defaults to None.
-            fillWith (object, optional): _description_. Defaults to None.
+            array (tuple[Any], optional): list given. Defaults to '()'.
+            max_length (int): list max length
+            fillWith (object, optional): . Defaults to None.
 
         Raises:
             ValueError: _description_
