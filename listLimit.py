@@ -54,29 +54,18 @@ class LimitedList:
             raise TypeError("new tuple has not tuple type")
         
         self.__array = new_tuple
-        
+
 
     def set_value(self, index : int, new_value : Any) -> None :
         if index >= self.__max_length:
-            raise IndexError(f"Index ({index}) is not valid, this object limit is '{self.limit}'")
+            raise IndexError(f"Index ({index}) is not valid, this object limit is '{self.max_length}'")
+        elif index < 0:
+            raise IndexError("index cannot be beneath 0")
 
-        tempList = list(self.__limitedList)
-        tempList[index] = new_value
+        temp_list = self.list_array
+        temp_list[index] = new_value
 
-        self.__limitedList = tuple(tempList)
-
-
-    def getList(self, showDefaultValue : bool = False) -> list :
-        if showDefaultValue:
-            return list(self.__limitedList)
-        else:
-            toReturn = []
-
-            for element in self.__limitedList:
-                if element != self.__defaultValue:
-                    toReturn.append(element)
-
-            return toReturn
+        self.__array = tuple(temp_list)
 
 
 
