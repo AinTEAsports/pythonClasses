@@ -74,11 +74,32 @@ class LimitedList:
         
         
     def add(self, value : Any) -> None :
-        pass
+        if len(self.tuple_array) == self.max_length:
+            return SizeError("array is already at maximum size")
+        
+        temp_list = self.list_array
+        temp_list.append(value)
+        
+        self.__array = tuple(temp_list)
+        
     
-    
-    def pop(self, index : int) -> Any :
-        pass
+    def insert(self, index : int, value : int) -> None :
+        if len(self.tuple_array) == self.max_length:
+            return SizeError("array is already at maximum size")
+        
+        temp_list = self.list_array
+        temp_list.insert(index, value)
+        
+        self.__array = tuple(temp_list)
+
+
+    def pop(self, index : int = -1) -> Any :
+        temp_list = self.list_array
+        return_value = temp_list.pop(index)
+        
+        self.__array = tuple(temp_list)
+        
+        return return_value
     
     
     def clear(self) -> None :
