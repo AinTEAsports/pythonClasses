@@ -6,11 +6,11 @@ class SizeError(Exception):
     pass
 
 
+
 @dataclass(kw_only=True)
 class LimitedList:
     array: tuple[Any] = field(default_factory=tuple)
     max_length: int
-    fill_with: Any = field(default=None)
 
 
     def __post_init__(self) -> None :
@@ -19,27 +19,16 @@ class LimitedList:
         Args:
             array (tuple[Any], optional): list given. Defaults to '()'.
             max_length (int): list max length
-            fillWith (object, optional): . Defaults to None.
 
         Raises:
-            ValueError: _description_
+            ValueError: if the max length is less than 0
         """
-        
-        if limit <= 0:
+
+        if self.max_length < 0:
             raise ValueError("You can't set max value to 0 or beneath")
         
-        # By default, all list elements will be None
-        if not preList:
-            preList = [fillWith] * limit
-        elif preList and fillWith:
-            preList += [fillWith] * (limit-len(preList))
-        else:
-            if len(preList) > limit:
-                raise ValueError(f"'preList' parameter's length cannot be superior to 'limit' parameter")
-
-        self.limit = limit
-        self.__limitedList = preList
-        self.__defaultValue = fillWith
+        if len(self.array) > self.max_length:
+            raise SizeError("The list is too long")
 
 
     def setValue(self, index : int, newValue):
