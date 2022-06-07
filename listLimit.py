@@ -7,17 +7,18 @@ class SizeError(Exception):
 
 
 
-@dataclass(kw_only=True)
+@dataclass
 class LimitedList:
-    __array: tuple[Any] = field(default_factory=tuple)
-    __max_length: int
+    __array: list[Any] = field(default_factory=list)
+    __max_length: int = 0
 
 
     def __post_init__(self) -> None :
         """Post init function
 
         Args:
-            array (tuple[Any], optional): list given. Defaults to '()'.
+            array (tuple[Any], optional): list given. Defaults to '[]'.
+                We ask to give it as list but we store it as tuple
             max_length (int): list max length
 
         Raises:
@@ -29,6 +30,8 @@ class LimitedList:
         
         if len(self.__array) > self.__max_length:
             raise SizeError("The list is too long")
+        
+        self.__array = tuple(self.__array)
 
 
     @property
@@ -114,5 +117,3 @@ class LimitedList:
 
 if __name__ == "__main__":
     print("When Chuck Norris goes out, the one who wears a mask is Coronavirus")
-
-# REVOIR L'ALGO DE TOUT CE BORDEL ET CHANGER SI BESOIN, IDEM POUR LES AUTRES FICHIERS
