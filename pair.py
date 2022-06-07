@@ -2,7 +2,7 @@ from typing import Any
 from dataclasses import dataclass
 
 
-@dataclass(frozen=True)
+@dataclass
 class Pair:
     __first: Any
     __second: Any
