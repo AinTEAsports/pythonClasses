@@ -27,15 +27,18 @@ class LimitedList:
 
         if self.__max_length < 0:
             raise ValueError("You can't set max value to 0 or beneath")
-        
+
+        if not type(self.__array) in [tuple, list]:
+            raise TypeError(f"given array sould be list or tuple but is '{type(self.__array)}'")
+                    
         if len(self.__array) > self.__max_length:
             raise SizeError("The list is too long")
-        
+
         self.__array = tuple(self.__array)
 
 
     @property
-    def tuple_array(self) -> tuple[Any] :
+    def tuple_array(self) -> Tuple[Any] :
         return self.__array
     
     
