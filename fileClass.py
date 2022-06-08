@@ -6,9 +6,9 @@ from dataclasses import dataclass
 
 
 # Methods ideas
-# remove_line
-# delete (delete the file)
-# move_line
+# remove_line                               DONE
+# delete (delete the file)                  DONE
+# move_line                                 DONE
 # traitement de str dans la classe
 
 @dataclass(frozen=True)
@@ -26,7 +26,7 @@ class File:
         """
         
         if not self.create_new and not os.path.exists(self.__filename):
-            raise FileNotFoundError(f"file '{self.__filename}' not found, if you want to automatically create it, even it does not exists, make sure parameter 'createNew' is set up to 'True'")
+            raise FileNotFoundError(f"file '{self.__filename}' not found, if you want to automatically create it, even it does not exists, make sure parameter 'create_new' is set up to 'True'")
         
         
         if not os.path.exists(self.__filename) and self.create_new:
@@ -34,9 +34,14 @@ class File:
                 f.write("")
 
 
-        @property
-        def absolute_path(self) -> str :
-            return os.path.abspath(self.__filename)
+    @property
+    def absolute_path(self) -> str :
+        return os.path.abspath(self.__filename)
+        
+        
+    @property
+    def line_number(self) -> int :
+        return len(self.get_lines())
 
 
     def write(self, text : str, encoding : str = "utf-8") -> None :
@@ -142,6 +147,32 @@ class File:
 
         lines = self.get_lines()
         del lines[line_number]
+        self.write('\n'.join(lines))
+        
+    
+    def move_line(self, line_number : int, new_line_number : int) -> None :
+        """Method to move a line in the file
+
+        Args:
+            line_number (int): the line number to move
+            new_line_number (int): the new line number
+        """
+
+        lines = self.get_lines()
+        lines.insert(new_line_number, lines.pop(line_number))
+        self.write('\n'.join(lines))
+    
+    
+    def exchange_lines(self, line_number_1 : int, line_number_2 : int) -> None :
+        """Method to exchange two lines in the file
+
+        Args:
+            line_number_1 (int): the first line number to exchange
+            line_number_2 (int): the second line number to exchange
+        """
+
+        lines = self.get_lines()
+        lines[line_number_1], lines[line_number_2] = lines[line_number_2], lines[line_number_1]
         self.write('\n'.join(lines))
 
 
