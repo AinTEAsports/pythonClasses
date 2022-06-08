@@ -4,6 +4,13 @@ import hashlib
 from dataclasses import dataclass
 
 
+
+# Methods ideas
+# remove_line
+# delete (delete the file)
+# move_line
+# traitement de str dans la classe
+
 @dataclass(frozen=True)
 class File:
     __filename: str
@@ -28,7 +35,7 @@ class File:
 
 
         @property
-        def __absolute_path(self) -> str :
+        def absolute_path(self) -> str :
             return os.path.abspath(self.__filename)
 
 
@@ -124,6 +131,18 @@ class File:
                     f2.write(b)
 
                     i += 1
+       
+                    
+    def delete_line(self, line_number : int) -> None :
+        """Method to delete a line in the file
+
+        Args:
+            line_number (int): the line number to delete
+        """
+
+        lines = self.get_lines()
+        del lines[line_number]
+        self.write('\n'.join(lines))
 
 
 
